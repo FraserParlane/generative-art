@@ -1,1 +1,1 @@
-{{ readFile "static/xml-approach.svg" | safeHTML }}
+<img src="./xml-approach.svg">
