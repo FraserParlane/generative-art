@@ -102,14 +102,15 @@ def run():
     cols = 3
     min_r = 10
     max_r = 100
-    n = 3
+    n = 4
     min_d = 10
     max_d = 100
     page_pad = 300
     d_buff = 0.2
-    lw = 7
+    lw = 3
     bg_color = '#1b1b1b'
     draw_color = '#ff9800'
+    time = 5
 
     # Create SVG fields
     path = elements.path
@@ -175,7 +176,7 @@ def run():
                     attributeName='transform',
                     type='rotate',
                     begin='0s',
-                    dur='10s',
+                    dur=f'{time}s',
                     repeatCount='indefinite',
                 )
                 anim.attrib['from'] = f'0 {x} {y}'
@@ -212,7 +213,7 @@ def run():
                         attributeName='transform',
                         type='rotate',
                         begin='0s',
-                        dur='10s',
+                        dur=f'{time}s',
                         repeatCount='indefinite',
                     )
                     anim.attrib['from'] = f'0 {x} {y}'
