@@ -15,12 +15,19 @@ def run():
 
     # Fields tags to use
     h1 = elements.h1
+    h2 = elements.h2
+    span = elements.span
     img = elements.img
     html = elements.html
     body = elements.body
     doc = html()
     body = body()
     doc.append(body)
+
+    # Title
+    body.append(h1('Experiments animating SVGs'))
+    body.append(span('Below are some experiments in animating SVGs as I learn '
+                    'the SVG standard.'))
 
     # Loop through the SVG files
     for fname in sorted(os.listdir('svg')):
@@ -29,7 +36,7 @@ def run():
             name = name.replace('-', ' ').title()
 
             # Add title
-            body.append(h1(name))
+            body.append(h2(name))
             body.append(img(
                 src=f'./svg/{fname}'
             ))
