@@ -32,6 +32,7 @@ def run():
     # Loop through the SVG files
     for fname in sorted(os.listdir('svg')):
         if fname.endswith('.svg'):
+            print(fname)
             name = fname.split('.')[0].split('_')[1]
             name = name.replace('-', ' ').capitalize()
 

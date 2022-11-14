@@ -123,7 +123,6 @@ def run():
         xmlns="http://www.w3.org/2000/svg",
         height=str(height),
         width=str(width),
-        style='background-color: white;'
     )
     doc.append(rect(
         x='0',
@@ -229,7 +228,7 @@ def run():
                 direction *= -1
     # Save
     base = os.path.basename(__file__).split('.')[0]
-    with open(f'svg/{base}.svg', 'wb') as f:
+    with open(f'../svg/{base}.svg', 'wb') as f:
         f.write(lxml.etree.tostring(doc, pretty_print=True))
 
 
