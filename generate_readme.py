@@ -32,8 +32,8 @@ def run():
     # Loop through the SVG files
     for fname in sorted(os.listdir('svg')):
         if fname.endswith('.svg'):
-            name = fname.split('.')[0]
-            name = name.replace('-', ' ').title()
+            name = fname.split('.')[0].split('_')[1]
+            name = name.replace('-', ' ').capitalize()
 
             # Add title
             body.append(h2(name))
