@@ -1,6 +1,7 @@
 import lxml.builder
 import lxml.etree
 import numpy as np
+import os
 
 # Generate the base elements.
 elements = lxml.builder.ElementMaker()
@@ -217,7 +218,8 @@ def run():
                 # Reverse direction for next object
                 direction *= -1
     # Save
-    with open('xml-approach.svg', 'wb') as f:
+    base = os.path.basename(__file__).split('.')[0]
+    with open(f'svg/{base}.svg', 'wb') as f:
         f.write(lxml.etree.tostring(doc, pretty_print=True))
 
 
