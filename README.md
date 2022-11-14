@@ -1,0 +1,1 @@
+{{ readFile "static/xml-approach.svg" | safeHTML }}

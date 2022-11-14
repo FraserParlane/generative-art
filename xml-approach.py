@@ -5,6 +5,8 @@ import numpy as np
 # Generate the base elements.
 elements = lxml.builder.ElementMaker()
 
+# Set the random seed
+np.random.seed(1.1)
 
 def make_circle_arc(
         x: float,
@@ -16,15 +18,15 @@ def make_circle_arc(
     """
     Generate a path element for an arc on a circle. The arc will be drawn
     counterclockwise from start to stop
-    :param x: The x position of the centre.
-    :param y: The y position of the centre.
+    :param x: The x position of the centre
+    :param y: The y position of the centre
     :param r: The radius
     :param start: The start position of the arc. Measured in polar coordinates
     where 1 is a complete rotation. The arc is drawn between the start and the
-    stop position.
+    stop position
     :param stop: The stop position of the arc. Measured in polar coordinates
     where 1 is a complete rotation. The arc is drawn between the start and the
-    stop position.
+    stop position
     :return: The path element.
     """
 
@@ -53,66 +55,166 @@ def make_circle_arc(
     return p
 
 
+def make_random_circle_arc(
+        x: float,
+        y: float,
+        r: float,
+        d_buff: float,
+) -> elements.path:
+    """
+    Make a circle arc of random length
+    :param x: The x position of the centre
+    :param y: The y position of the centre
+    :param r: The radius
+    :param d_buff: The buffer on the sweep. For example, if d_buff = 0.1, the
+    length of the arc is randomly chosen between 0.05 and 0.95
+    :return: The path element
+    """
+
+    # Generate random start and stop positions
+    start = np.random.uniform()
+    stop_min = start + d_buff
+    stop_max = 1 + start - d_buff
+    stop = np.random.uniform(stop_min, stop_max) % 1
+
+    # Return the circle arc path
+    return make_circle_arc(
+        x=x,
+        y=y,
+        r=r,
+        start=start,
+        stop=stop,
+    )
+
+
 def run():
 
-
-    height = '1000'
-    width = '1000'
+    # Constants that define the page
+    height = 1000
+    width = 1000
     doc = elements.doc
     svg = elements.svg
+
+    # Constants that define circle generation
+    rows = 3
+    cols = 3
+    min_r = 10
+    max_r = 100
+    n = 3
+    min_d = 10
+    max_d = 80
+    page_pad = 350
+    d_buff = 0.2
+    lw = 5
+    bg_color = '#1b1b1b'
+    draw_color = '#ff9800'
 
     # Create SVG fields
     path = elements.path
     circle = elements.circle
     rect = elements.rect
+    animate_transform = elements.animateTransform
 
     # Create document with white background
     doc = svg(
         xmlns="http://www.w3.org/2000/svg",
-        height=height,
-        width=width,
+        height=str(height),
+        width=str(width),
         style='background-color: white;'
     )
     doc.append(rect(
         x='0',
         y='0',
-        width=width,
-        height=height,
-        fill='white',
+        width=str(width),
+        height=str(height),
+        fill=bg_color,
     ))
 
-    p = make_circle_arc(
-        x=500,
-        y=500,
-        r=100,
-        start=0.95,
-        stop=0.55,
-    )
-    p.attrib['stroke'] = 'crimson'
-    p.attrib['stroke-width'] = '5'
-    p.attrib['fill'] = 'none'
-    doc.append(p)
+    # Calculate some spacing constants
+    x_space = (width - 2 * page_pad) / (rows - 1)
+    y_space = (height - 2 * page_pad) / (cols - 1)
+    d_space = (max_d - min_d) / n
 
-    # Outline circle
-    doc.append(circle(
-        cx='500',
-        cy='500',
-        r='100',
-        stroke='silver',
-        fill='None',
-    ))
+    # Alternate the rotation direction
+    direction = 1
 
-    # # Circle
-    # c = circle(
-    #     cx='500',
-    #     cy='500',
-    #     r='5',
-    #     stroke='red',
-    #     fill='None',
-    # )
-    # print(c.attrib['stroke'])
-    # doc.append(c)
+    # For each position, circle
+    for i_row in range(rows):
+        for i_col in range(cols):
+            for i_n in range(n):
 
+                # Create the positions
+                x = page_pad + i_row * x_space
+                y = page_pad + i_col * y_space
+                r = min_d + i_n * d_space
+
+                # Make circle arcs
+                a = make_random_circle_arc(
+                    x=x,
+                    y=y,
+                    r=r,
+                    d_buff=d_buff,
+
+                )
+
+                # Format
+                a.attrib['stroke'] = draw_color
+                a.attrib['fill'] = 'none'
+                a.attrib['stroke-width'] = str(lw)
+                a.attrib['stroke-linecap'] = 'round'
+
+                # Animate
+                anim = animate_transform(
+                    attributeName='transform',
+                    type='rotate',
+                    begin='0s',
+                    dur='10s',
+                    repeatCount='indefinite',
+                )
+                anim.attrib['from'] = f'0 {x} {y}'
+                anim.attrib['to'] = f'{direction * 360} {x} {y}'
+                a.append(anim)
+
+                # Dash some
+                if np.random.uniform() < 1 / 3:
+                    a.attrib['stroke-dasharray'] = '7 15'
+
+                # Add to document
+                doc.append(a)
+
+                # Generate a circle at a random angle
+                theta = np.random.uniform()
+                cx = x + r * np.cos(theta * 2 * np.pi)
+                cy = y + r * np.sin(theta * 2 * np.pi)
+
+                # Randomly, for 1/3
+                if np.random.uniform() < 1/3:
+
+                    # Add the circle
+                    circ = circle(
+                        cx=str(cx),
+                        cy=str(cy),
+                        r=str(d_space / 3),
+                        stroke=draw_color,
+                        fill=bg_color,
+                    )
+                    circ.attrib['stroke-width'] = str(lw)
+
+                    # Animate
+                    anim = animate_transform(
+                        attributeName='transform',
+                        type='rotate',
+                        begin='0s',
+                        dur='10s',
+                        repeatCount='indefinite',
+                    )
+                    anim.attrib['from'] = f'0 {x} {y}'
+                    anim.attrib['to'] = f'{direction * 360 * -1} {x} {y}'
+                    circ.append(anim)
+                    doc.append(circ)
+
+                # Reverse direction for next object
+                direction *= -1
     # Save
     with open('xml-approach.svg', 'wb') as f:
         f.write(lxml.etree.tostring(doc, pretty_print=True))
