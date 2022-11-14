@@ -6,7 +6,8 @@ import numpy as np
 elements = lxml.builder.ElementMaker()
 
 # Set the random seed
-np.random.seed(1.1)
+np.random.seed(1)
+
 
 def make_circle_arc(
         x: float,
