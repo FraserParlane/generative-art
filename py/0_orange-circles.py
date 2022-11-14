@@ -7,7 +7,7 @@ import os
 elements = lxml.builder.ElementMaker()
 
 # Set the random seed
-np.random.seed(1)
+np.random.seed(2)
 
 
 def make_circle_arc(
@@ -104,10 +104,10 @@ def run():
     max_r = 100
     n = 3
     min_d = 10
-    max_d = 80
-    page_pad = 350
+    max_d = 100
+    page_pad = 300
     d_buff = 0.2
-    lw = 5
+    lw = 7
     bg_color = '#1b1b1b'
     draw_color = '#ff9800'
 
@@ -143,6 +143,11 @@ def run():
     # For each position, circle
     for i_row in range(rows):
         for i_col in range(cols):
+
+            # If in the last position, skip
+            if i_row == rows - 1 and i_col == cols - 1:
+                continue
+
             for i_n in range(n):
 
                 # Create the positions
@@ -178,7 +183,7 @@ def run():
                 a.append(anim)
 
                 # Dash some
-                if np.random.uniform() < 1 / 3:
+                if np.random.uniform() < 1 / 3 and i_n != 0:
                     a.attrib['stroke-dasharray'] = '7 15'
 
                 # Add to document
@@ -189,8 +194,8 @@ def run():
                 cx = x + r * np.cos(theta * 2 * np.pi)
                 cy = y + r * np.sin(theta * 2 * np.pi)
 
-                # Randomly, for 1/3
-                if np.random.uniform() < 1/3:
+                # Randomly, for 1/2
+                if np.random.uniform() < 1/2 and i_n != 0:
 
                     # Add the circle
                     circ = circle(
