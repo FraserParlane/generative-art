@@ -7,7 +7,7 @@ import os
 elements = lxml.builder.ElementMaker()
 
 # Set the random seed
-np.random.seed(2)
+np.random.seed(5)
 
 
 def make_circle_arc(
@@ -207,6 +207,10 @@ def run():
                         fill=bg_color,
                     )
                     circ.attrib['stroke-width'] = str(lw)
+
+                    # Random fill
+                    if np.random.uniform() < 0.3:
+                        circ.attrib['fill'] = draw_color
 
                     # Animate
                     anim = animate_transform(
