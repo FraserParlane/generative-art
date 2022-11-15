@@ -175,7 +175,7 @@ def run():
                     attributeName='transform',
                     type='rotate',
                     begin='0s',
-                    dur=f'{time}s',
+                    dur=f'{time * np.random.uniform(0.8, 1.2)}s',
                     repeatCount='indefinite',
                 )
                 anim.attrib['from'] = f'0 {x} {y}'
@@ -216,7 +216,7 @@ def run():
                         attributeName='transform',
                         type='rotate',
                         begin='0s',
-                        dur=f'{time}s',
+                        dur=f'{time * np.random.uniform(0.8, 1.2)}s',
                         repeatCount='indefinite',
                     )
                     anim.attrib['from'] = f'0 {x} {y}'
