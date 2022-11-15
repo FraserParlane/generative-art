@@ -59,11 +59,11 @@ def run():
     ))
 
     # Constants that define the drawing
-    n = 6
+    n = 10
     n_rand = 10
     page_buff = 300
-    shrink = 0.1
-    random = 0.02
+    shrink = 0.2
+    random = 0.01
 
     # Calculate constants
     stride = (width - 2 * page_buff) / (n - 1)
@@ -72,8 +72,6 @@ def run():
     # Make grid, random offsetS
     grid = np.zeros((n, n, 2))
     rand_offsets = [np.random.uniform(1-random, 1+random, (n, n, 2)) for i in range(n_rand)]
-    # random_offset_0 = np.random.uniform(1-random, 1+random, (n, n, 2))
-    # random_offset_1 = np.random.uniform(1 - random, 1 + random, (n, n, 2))
 
     # Fill with values, apply random offset
     for i, i_val in enumerate(np.linspace(page_buff, height - page_buff, n)):
@@ -85,9 +83,8 @@ def run():
     for j in range(n-1):
         for i in range(n-1):
 
+            # Create d paths
             ds = [grid_to_d(g[i:i+2, j:j+2], offset=offset) for g in grids]
-            # d_0 = grid_to_d(grid_0[i:i+2, j:j+2], offset=offset)
-            # d_1 = grid_to_d(grid_1[i:i + 2, j:j + 2], offset=offset)
 
             # Plot square
             p = path(
